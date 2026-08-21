@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A cinematography portfolio by Stelios Dagkas.">
+  <title>Stelios Dagkas | Cinematographer</title>
+  <style>
+    :root {
+      --ink: #0a0a09;
+      --panel: #141412;
+      --paper: #f3f0e8;
+      --muted: #aaa79f;
+      --line: rgba(243, 240, 232, 0.19);
+      --accent: #d9aa62;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--sans);
+      line-height: 1.45;
+    }
+    body.modal-open, body.menu-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .site-header {
+      position: fixed;
+      z-index: 10;
+      top: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px solid transparent;
+      transition: background 220ms ease, border-color 220ms ease;
+    }
+    .site-header.is-scrolled { background: rgba(10, 10, 9, 0.93); border-color: var(--line); }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(100% - 48px, 1440px);
+      height: 74px;
+      margin: auto;
+    }
+    .wordmark { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; }
+    .wordmark span { color: var(--accent); }
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links a { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 180ms ease; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--paper); }
+    .menu-button { display: none; background: none; border: 0; color: var(--paper); cursor: pointer; }
+
+    .hero {
+      position: relative;
+      display: flex;
+      align-items: end;
+      min-height: 100svh;
+      padding: 132px max(24px, calc((100vw - 1440px) / 2)) 54px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(8, 8, 7, 0.72) 0%, rgba(8, 8, 7, 0.16) 70%), linear-gradient(0deg, rgba(8, 8, 7, 0.78) 0%, transparent 48%);
+      z-index: 1;
+    }
+    .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; animation: reveal-image 900ms ease both; }
+    .hero-content { position: relative; z-index: 2; width: min(720px, 100%); animation: rise 700ms 160ms ease both; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; color: var(--accent); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+    .eyebrow::before { width: 28px; height: 1px; background: currentColor; content: ""; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 20px; font-family: var(--serif); font-size: clamp(4rem, 9vw, 9.6rem); font-weight: 400; letter-spacing: 0; line-height: 0.84; }
+    .hero-copy { max-width: 430px; margin-bottom: 31px; color: #d7d4cc; font-size: 1rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; }
+    .text-link { display: inline-flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--accent); padding-bottom: 6px; color: var(--paper); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; transition: color 180ms ease, border-color 180ms ease; }
+    .text-link::after { content: "\2197"; font-size: 1rem; font-weight: 400; }
+    .text-link:hover { color: var(--accent); }
+    .hero-index { position: absolute; z-index: 2; right: max(24px, calc((100vw - 1440px) / 2)); bottom: 54px; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.13em; }
+
+    .section { padding: 132px max(24px, calc((100vw - 1440px) / 2)); }
+    .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 28px; margin-bottom: 48px; border-top: 1px solid var(--line); padding-top: 14px; }
+    .section-heading h2 { margin: 0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
+    .section-number { color: var(--accent); font-family: var(--serif); font-size: 1.3rem; }
+
+    .about-grid { display: grid; grid-template-columns: minmax(260px, 0.8fr) minmax(300px, 1fr) minmax(230px, 0.65fr); gap: clamp(30px, 5vw, 86px); align-items: start; }
+    .portrait-wrap { overflow: hidden; aspect-ratio: 3 / 4; background: var(--panel); }
+    .portrait-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 500ms ease; }
+    .portrait-wrap:hover img { transform: scale(1.04); }
+    .about-title { margin-bottom: 26px; font-family: var(--serif); font-size: clamp(2.4rem, 4vw, 4.4rem); font-weight: 400; line-height: 0.96; }
+    .about-copy { max-width: 480px; color: #c6c3bb; font-size: 1.05rem; }
+    .about-copy p + p { margin-top: 18px; }
+    .facts { margin: 5px 0 0; padding: 0; list-style: none; }
+    .facts li { border-top: 1px solid var(--line); padding: 13px 0; color: var(--muted); font-size: 0.78rem; }
+    .facts strong { display: block; margin-bottom: 3px; color: var(--paper); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .portfolio { background: var(--panel); }
+    .portfolio-controls { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 36px; }
+    .filter-list { display: flex; flex-wrap: wrap; gap: 5px 25px; }
+    .filter-button { padding: 5px 0; border: 0; border-bottom: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .filter-button:hover, .filter-button:focus-visible, .filter-button.active { border-color: var(--accent); color: var(--paper); }
+    .project-count { color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em; }
+    .project-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+    .project { grid-column: span 4; min-width: 0; animation: rise 400ms ease both; }
+    .project:nth-child(4n + 1), .project:nth-child(4n) { grid-column: span 8; }
+    .project-button { display: block; width: 100%; border: 0; padding: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }
+    .project-media { position: relative; overflow: hidden; aspect-ratio: 16 / 10; background: #242320; }
+    .project:nth-child(4n + 1) .project-media, .project:nth-child(4n) .project-media { aspect-ratio: 16 / 9; }
+    .project-media::after { content: ""; position: absolute; inset: 0; background: rgba(10, 10, 9, 0.04); transition: background 240ms ease; }
+    .project-button:hover .project-media::after, .project-button:focus-visible .project-media::after { background: rgba(10, 10, 9, 0.34); }
+    .project-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 500ms ease; }
+    .project-button:hover img, .project-button:focus-visible img { transform: scale(1.045); }
+    .media-marker { position: absolute; z-index: 1; right: 15px; bottom: 15px; display: grid; width: 35px; height: 35px; place-items: center; border: 1px solid rgba(243, 240, 232, 0.76); border-radius: 50%; color: var(--paper); font-size: 0.8rem; transition: color 240ms ease, background 240ms ease; }
+    .project-button:hover .media-marker { background: var(--paper); color: var(--ink); }
+    .project-info { display: flex; justify-content: space-between; gap: 20px; padding-top: 12px; }
+    .project-info h3 { margin: 0; font-family: var(--serif); font-size: 1.48rem; font-weight: 400; line-height: 1.05; }
+    .project-info p { margin: 4px 0 0; color: var(--muted); font-size: 0.67rem; letter-spacing: 0.09em; text-transform: uppercase; }
+    .project-description { margin: 11px 0 0; color: #c6c3bb; font-size: 0.83rem; line-height: 1.5; }
+    .project-year { flex: 0 0 auto; color: var(--accent); font-size: 0.7rem; }
+
+    .contact { position: relative; min-height: 75svh; display: flex; flex-direction: column; justify-content: space-between; background: var(--accent); color: var(--ink); }
+    .contact .section-heading { border-color: rgba(10, 10, 9, 0.24); }
+    .contact .section-number { color: var(--ink); }
+    .contact-content { padding: 5vh 0 8vh; }
+    .contact-title { max-width: 960px; margin-bottom: 35px; font-family: var(--serif); font-size: clamp(3.6rem, 7vw, 7.5rem); font-weight: 400; line-height: 0.88; }
+    .contact-title a { border-bottom: 2px solid var(--ink); transition: opacity 180ms ease; }
+    .contact-title a:hover { opacity: 0.57; }
+    .contact-bottom { display: flex; justify-content: space-between; gap: 30px; align-items: end; border-top: 1px solid rgba(10, 10, 9, 0.24); padding-top: 17px; }
+    .availability { max-width: 300px; margin: 0; font-size: 0.82rem; }
+    .socials { display: flex; flex-wrap: wrap; gap: 22px; }
+    .socials a { border-bottom: 1px solid var(--ink); font-size: 0.71rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+
+    .modal { position: fixed; z-index: 20; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(0, 0, 0, 0.88); }
+    .modal.is-open { display: flex; }
+    .modal-content { position: relative; width: min(1100px, 100%); max-height: calc(100svh - 48px); animation: rise 220ms ease both; }
+    .modal-close { position: absolute; z-index: 1; top: -44px; right: 0; display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--ink); color: var(--paper); cursor: pointer; font-size: 1.2rem; line-height: 1; }
+    .modal-media { max-height: calc(100svh - 48px); background: #111; }
+    .modal-media img, .modal-media iframe { display: block; width: 100%; max-height: calc(100svh - 48px); border: 0; }
+    .modal-media img { height: auto; object-fit: contain; }
+    .modal-media iframe { aspect-ratio: 16 / 9; }
+    .modal-caption { margin: 14px 0 0; }
+    .modal-caption h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 1.8rem; font-weight: 400; }
+    .modal-metadata { margin: 5px 0 0; color: var(--accent); font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .modal-description { margin: 8px 0 0; color: #d4d1c9; font-size: 0.84rem; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes reveal-image { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: scale(1); } }
+    @media (max-width: 760px) {
+      .nav { width: min(100% - 40px, 1440px); height: 64px; }
+      .menu-button { display: grid; padding: 8px 0 8px 12px; place-items: center; }
+      .nav-links { position: absolute; top: 64px; left: 0; display: none; width: 100%; flex-direction: column; align-items: flex-start; gap: 22px; padding: 25px 20px 29px; border-bottom: 1px solid var(--line); background: var(--ink); }
+      .nav-links.is-open { display: flex; }
+      .nav-links a { font-size: 0.84rem; }
+      .hero { min-height: 86svh; padding: 115px 20px 33px; }
+      .hero-index { display: none; }
+      .section { padding: 87px 20px; }
+      .section-heading { margin-bottom: 34px; }
+      .about-grid { grid-template-columns: 1fr; gap: 30px; }
+      .portrait-wrap { width: min(100%, 400px); }
+      .about-title { margin-bottom: 18px; }
+      .project-grid { grid-template-columns: 1fr; gap: 31px; }
+      .project, .project:nth-child(4n + 1), .project:nth-child(4n) { grid-column: auto; }
+      .project-media, .project:nth-child(4n + 1) .project-media, .project:nth-child(4n) .project-media { aspect-ratio: 16 / 10; }
+      .project-info h3 { font-size: 1.34rem; }
+      .contact { min-height: 70svh; }
+      .contact-bottom { flex-direction: column; align-items: flex-start; }
+      .modal { padding: 16px; }
+      .modal-content { max-height: calc(100svh - 32px); }
+      .modal-close { top: -41px; }
+      .modal-media, .modal-media img, .modal-media iframe { max-height: calc(100svh - 32px); }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="wordmark" href="#top">STELIOS <span>DAGKAS</span></a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open navigation">Menu</button>
+      <div class="nav-links" id="nav-links">
+        <a href="#about">About</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <img class="hero-image" src="/slate.jpg" alt="A film scene framed through a camera lens">
+      <div class="hero-content">
+        <p class="eyebrow">Director, Cinematographer / Athens, Greece</p>
+        <h1 id="hero-title">Stelios<br>Dagkas</h1>
+        <p class="hero-copy">Observing the tension between a place, a face, and the light that finds them.</p>
+        <div class="hero-actions">
+          <a class="text-link" href="#portfolio">Selected work</a>
+        </div>
+      </div>
+      <span class="hero-index">01 / 03</span>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="about-title">
+      <div class="section-heading"><h2>About me</h2><span class="section-number">01</span></div>
+      <div class="about-grid">
+        <div class="portrait-wrap"><img src="/stelios-dagkas.jpg" alt="Cinematographer Stelios Dagkas"></div>
+        <div>
+          <h2 class="about-title" id="about-title">The image has to feel like a memory.</h2>
+          <div class="about-copy">
+            <p>Stelios Dagkas is an Athens-based director and cinematographer working across narrative film, documentary, music, and commercial projects.</p>
+            <p>He is drawn to images that feel discovered rather than manufactured, light that behaves unpredictably, faces that reveal more than they intend to, and landscapes that become part of the story. His work balances careful composition with an instinct for the spontaneous, searching for beauty in the real, the intimate, the imperfect, and sometimes the uncomfortable.</p>
+          </div>
+        </div>
+        <ul class="facts" aria-label="Professional details">
+          <li><strong>Roles</strong>Director, Cinematographer</li>
+          <li><strong>Based</strong>Athens, Greece</li>
+          <li><strong>Genres</strong>Fiction, Documentary</li>
+          <li><strong>Format</strong>Features, Shorts, Music videos</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section portfolio" id="portfolio" aria-labelledby="portfolio-title">
+      <div class="section-heading"><h2 id="portfolio-title">Selected work</h2><span class="section-number">02</span></div>
+      <div class="portfolio-controls">
+        <div class="filter-list" role="tablist" aria-label="Portfolio categories">
+          <button class="filter-button active" type="button" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button class="filter-button" type="button" role="tab" aria-selected="false" data-filter="features">Features</button>
+          <button class="filter-button" type="button" role="tab" aria-selected="false" data-filter="shorts">Shorts</button>
+          <button class="filter-button" type="button" role="tab" aria-selected="false" data-filter="music">Music videos</button>
+        </div>
+        <span class="project-count" id="project-count"></span>
+      </div>
+      <div class="project-grid" id="project-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="section-heading"><h2>Contact</h2><span class="section-number">03</span></div>
+      <div class="contact-content">
+        <h2 class="contact-title" id="contact-title">Let&apos;s make<br>something worth remembering.</h2>
+        <div class="contact-bottom">
+          <p class="availability">All we have is each other.</p>
+          <div class="socials">
+            <a id="email-link" href=""></a>
+            <a href="https://www.instagram.com/s_dagkas" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://vimeo.com/steliosdagkas" target="_blank" rel="noopener noreferrer">Vimeo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="media-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" type="button" aria-label="Close media viewer">&times;</button>
+      <div class="modal-media" id="modal-media"></div>
+      <div class="modal-caption">
+        <h2 id="modal-title"></h2>
+        <p class="modal-metadata" id="modal-metadata"></p>
+        <p class="modal-description" id="modal-description"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const projects = [
+      { 
+        category: 'features', format: 'Documentary Feature', title: 'On Lavender', director: 'Makis Evangelatos - Eirini Chatzi', role: 'Director of Photography, Producer', year: '2025', 
+        description: 'On Lavender explores the multiplicities of gender identity in Greek society, weaving a tapestry of narratives that reflect the intricate complexities of identity in an evolving world. This debut feature is the result of a four-year effort and marks the first in-depth exploration of gender identity in Greece, primarily funded by its contributors.<br/>Director: Makis Evangelatos, Co-Director: Eirini Chatzi<br/>Mermaid Award Special Mention – Thessaloniki International Documentary Festival 2025', 
+        type: 'video', image: '/on-lavender.jpg', videoUrl: 'https://www.youtube.com/watch?v=YF3P54Z4dbY', alt: 'On Lavender documentary' 
+      },
+      { category: 'music', format: 'Music Video', title: 'Daimonio - Freaks', director: 'Makis Evangelatos - Stelios Dagkas', role: 'Co-Director, Cinematographer, Co-Editor, Producer', year: '2026', 
+        description: 'Official music video for Daimonio, an independent artist known for blending high-BPM electronic sounds, tekno, and DIY femme rap.<br/>Directed by: Makis Evangelatos, Stelios Dagkas', 
+        type: 'video', image: '/daimonio-freaks.jpg', videoUrl: 'https://www.youtube.com/watch?v=TDXsRpbVsA8', alt: 'Daimonio - Freaks music video' 
+      },
+      { category: 'music', format: 'Music Video', title: 'Animal Anatomy - Red Skin', director: '', role: 'Cinematographer', year: '2026', 
+        description: 'Official music video for Animal Anatomy.', 
+        type: 'video', image: '/animal-anatomy-red-skin.jpg', videoUrl: 'https://www.youtube.com/watch?v=JMeuGRJwOs4', alt: 'Animal Anatomy - Red Skin music video' 
+      },
+      { category: 'music', format: 'Music Video', title: 'Dolly Vara - Apetaxamin!', director: 'Makis Evangelatos', role: 'Director of Photography, Co-Producer', year: '2026', 
+        description: 'Official music video for a prominent hip-hop/rap single that blends dark, experimental rap elements with vivid, ritualistic imagery.<br/>Directed by: Makis Evangelatos', 
+        type: 'video', image: '/dolly-vara-apetaxamin.jpg', videoUrl: 'https://www.youtube.com/watch?v=bheMD7noE34', alt: 'Dolly Vara - Apetaxamin music video' 
+      },
+      { category: 'music', format: 'Music Video', title: 'Dolly Vara - Ta kala paidia', director: 'Makis Evangelatos', role: 'Director of Photography, Co-Producer', year: '2025', 
+        description: 'Official music video for a dance/hip-hop track from Dolly Vara\'s debut album.<br/>Directed by: Makis Evangelatos', 
+        type: 'video', image: '/dolly-vara-ta-kala-paidia.jpg', videoUrl: 'https://www.youtube.com/watch?v=u7PAFePQyE0', alt: 'Dolly Vara - Ta kala paidia music video' 
+      },
+      { category: 'music', format: 'Music Video', title: 'Dolly Vara - Click Click', director: 'Makis Evangelatos', role: 'Cinematographer, Co-Producer', year: '2024', 
+        description: 'Official music video for a raw, high-energy queer rap and trap song from Dolly Vara\'s debut album.<br/>Directed by: Makis Evangelatos', 
+        type: 'video', image: '/dolly-vara-click-click.jpg', videoUrl: 'https://www.youtube.com/watch?v=0wJ6EvWpUQo', alt: 'Dolly Vara - Click Click music video' 
+      },
+      // { category: 'music', format: 'Music Video', title: 'N\'Cheezed - Skones', director: 'Eirini Chatzi', role: 'B Camera', year: '2024', 
+      //   description: 'Official music video for N\'Cheezed.<br/>Directed by: Eirini Chatzi', 
+      //   type: 'video', image: 'ncheezed-skones.png', videoUrl: 'https://www.youtube.com/watch?v=phRV5344Ldk', alt: 'N\'Cheezed - Skones music video' 
+      // },
+      { category: 'shorts', format: 'Fiction Short', title: 'ECHO', director: 'Stelios Dagkas', role: 'Writer, Director, Cinematographer, Editor, Producer', year: '2021', 
+        description: '"In her delight, Echo rushed to Narcissus ready to throw her arms around her beloved. Narcissus, however, was appalled and, spurning her, exclaimed, ‘Hands off! May I die before you enjoy my body.’ All Echo could whisper in reply was, ‘enjoy my body’ and having done so she fled, scorned, humiliated, and shamed."<br/>Directed by: Stelios Dagkas', 
+        type: 'video', image: '/echo.jpg', videoUrl: 'https://vimeo.com/534191502', alt: 'ECHO short film' 
+      },
+      { category: 'shorts', format: 'Fiction Short', title: 'The Tailor', director: 'Stelios Dagkas', role: 'Writer, Director, Editor, Producer', year: '2016', 
+        description: 'Jack is disappointed by humanity because he believes that no one knows how to live. When he expresses his thoughts out loud for the first time, he realizes that neither does he.<br/>Directed by: Stelios Dagkas', 
+        type: 'video', image: '/the-tailor.jpg', videoUrl: 'https://vimeo.com/312932201', alt: 'The Tailor short film' 
+      },
+      { category: 'shorts', format: 'Fiction Short', title: 'Walls', director: 'Stelios Dagkas', role: 'Writer, Director, Cinematographer, Editor, Sound designer, Producer', year: '2016', 
+        description: 'Χωρίς περίσκεψιν, χωρίς λύπην, χωρίς αιδώ<br/>μεγάλα κι υψηλά τριγύρω μου έκτισαν τείχη.<br/>Και κάθομαι και απελπίζομαι τώρα εδώ.<br/>Άλλο δεν σκέπτομαι: τον νουν μου τρώγει αυτή η τύχη·<br/>διότι πράγματα πολλά έξω να κάμω είχον.<br/>Α όταν έκτιζαν τα τείχη πώς να μην προσέξω.<br/>Αλλά δεν άκουσα ποτέ κρότον κτιστών ή ήχον.<br/>Ανεπαισθήτως μ’ έκλεισαν από τον κόσμον έξω.<br/>Directed by: Stelios Dagkas', 
+        type: 'video', image: '/walls.jpg', videoUrl: 'https://vimeo.com/171144448', alt: 'Walls short film' 
+      },
+      { category: 'shorts', format: 'Theater Trailer', title: 'M.E.D.E.A Trailer', director: 'Stelios Dagkas', role: 'Director, Cinematographer, Editor, Sound designer', year: '2016', 
+        description: '“There is no anger more terrible and incurable than that which is born between people who once loved each other…”<br/>Promotional trailer for the theater production M.E.D.E.A by Giorgos Papadakis.<br/>Directed by: Stelios Dagkas', 
+        type: 'video', image: '/medea-trailer.jpg', videoUrl: 'https://vimeo.com/167957217', alt: 'M.E.D.E.A Trailer' 
+      },
+      { category: 'shorts', format: 'Video Art', title: 'M.E.D.E.A Intro', director: 'Stelios Dagkas', role: 'Director, Cinematographer, Editor, Sound designer', year: '2016', 
+        description: 'Video art for the theater production M.E.D.E.A by Giorgos Papadakis.<br/>Directed by: Stelios Dagkas', 
+        type: 'video', image: '/medea-video-art.jpg', videoUrl: 'https://vimeo.com/169434816', alt: 'M.E.D.E.A Intro video art' 
+      },
+      { category: 'shorts', format: 'Fiction Short', title: 'The Tailor (concept test)', director: 'Stelios Dagkas', role: 'Director, Cinematographer, Editor, Sound designer, Producer', year: '2015', 
+        description: 'Based on Charles Bukowski\'s Notes of a Dirty Old Man.<br/>Directed by: Stelios Dagkas', 
+        type: 'video', image: '/the-tailor-concept-test.jpg', videoUrl: 'https://vimeo.com/190925238', alt: 'The Tailor (concept test) short film' 
+      },
+    ];
+
+    const grid = document.querySelector('#project-grid');
+    const count = document.querySelector('#project-count');
+    const filterButtons = document.querySelectorAll('.filter-button');
+    const modal = document.querySelector('#media-modal');
+    const modalMedia = document.querySelector('#modal-media');
+    const modalTitle = document.querySelector('#modal-title');
+    const modalMetadata = document.querySelector('#modal-metadata');
+    const modalDescription = document.querySelector('#modal-description');
+    const closeModalButton = document.querySelector('.modal-close');
+    const navLinks = document.querySelector('#nav-links');
+    const menuButton = document.querySelector('.menu-button');
+    const emailLink = document.querySelector('#email-link');
+    let lastFocusedElement;
+
+    const emailAddress = ['stelios', 'dagkas', 'gmail', 'com'];
+    const email = `${emailAddress[0]}.${emailAddress[1]}@${emailAddress[2]}.${emailAddress[3]}`;
+    const emailAnchor = document.getElementById('email-link');
+    emailAnchor.href = `mailto:${email}`;
+    emailAnchor.textContent = email;
+
+    function getVideoMarkup(project) {
+      const isLocalFile = window.location.protocol === 'file:';
+      const watchLink = project.videoUrl;
+
+      if (isLocalFile) {
+        return `<p class="video-fallback">Video embeds require a hosted page. <a href="${watchLink}" target="_blank" rel="noopener noreferrer">Open ${project.title} in a new tab</a></p>`;
+      }
+
+      const videoUrl = new URL(project.videoUrl);
+      const isYouTube = videoUrl.hostname.includes('youtube.com') || videoUrl.hostname === 'youtu.be';
+      const videoId = videoUrl.hostname === 'youtu.be'
+        ? videoUrl.pathname.slice(1)
+        : videoUrl.searchParams.get('v');
+      const embedUrl = isYouTube
+        ? new URL(`https://www.youtube-nocookie.com/embed/${videoId}`)
+        : new URL(`https://player.vimeo.com/video/${videoUrl.pathname.split('/').filter(Boolean).at(-1)}`);
+
+      embedUrl.searchParams.set('autoplay', '1');
+      embedUrl.searchParams.set('muted', '1');
+      if (isYouTube) {
+        embedUrl.searchParams.set('origin', window.location.origin);
+        embedUrl.searchParams.set('playsinline', '1');
+      }
+
+      return `<iframe src="${embedUrl}" title="${project.title}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    }
+
+    function renderProjects(category) {
+      const visibleProjects = category === 'all'
+        ? projects
+        : projects.filter((project) => project.category === category);
+      count.textContent = `${String(visibleProjects.length).padStart(2, '0')} projects`;
+      grid.innerHTML = visibleProjects.map((project, index) => `
+        <article class="project" style="animation-delay: ${index * 55}ms">
+          <button class="project-button" type="button" data-project="${projects.indexOf(project)}" aria-label="Open ${project.title}">
+            <div class="project-media">
+              <img src="${project.image}" alt="${project.alt}" loading="lazy">
+              <span class="media-marker" aria-hidden="true">${project.type === 'video' ? '&#9654;' : '&#8599;'}</span>
+            </div>
+            <div class="project-info">
+              <div><h3>${project.title}</h3><p>${project.format} / ${project.role}</p></div>
+              <span class="project-year">${project.year}</span>
+            </div>
+            <p class="project-description">${project.description}</p>
+          </button>
+        </article>`).join('');
+    }
+
+    function openModal(project, trigger) {
+      lastFocusedElement = trigger;
+      modalTitle.textContent = project.title;
+      modalMetadata.textContent = `${project.format} / Role: ${project.role} / ${project.year}`;
+      modalDescription.innerHTML = project.description;
+      modalMedia.innerHTML = project.type === 'video'
+        ? getVideoMarkup(project)
+        : `<img src="${project.image}" alt="${project.alt}">`;
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      closeModalButton.focus();
+    }
+
+    function closeModal() {
+      if (!modal.classList.contains('is-open')) return;
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      modalMedia.innerHTML = '';
+      document.body.classList.remove('modal-open');
+      lastFocusedElement?.focus();
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        filterButtons.forEach((item) => { item.classList.remove('active'); item.setAttribute('aria-selected', 'false'); });
+        button.classList.add('active');
+        button.setAttribute('aria-selected', 'true');
+        renderProjects(button.dataset.filter);
+      });
+    });
+
+    grid.addEventListener('click', (event) => {
+      const trigger = event.target.closest('.project-button');
+      if (trigger) openModal(projects[Number(trigger.dataset.project)], trigger);
+    });
+
+    closeModalButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeModal(); });
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('is-open');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+      menuButton.textContent = isOpen ? 'Close' : 'Menu';
+      document.body.classList.toggle('menu-open', isOpen);
+    });
+    navLinks.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.textContent = 'Menu';
+      document.body.classList.remove('menu-open');
+    });
+    window.addEventListener('scroll', () => document.querySelector('.site-header').classList.toggle('is-scrolled', window.scrollY > 12));
+
+    renderProjects('all');
+  </script>
+</body>
+</html>
