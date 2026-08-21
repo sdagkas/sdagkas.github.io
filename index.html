@@ -53,7 +53,7 @@
     .nav-links { display: flex; gap: 30px; align-items: center; }
     .nav-links a { color: var(--muted); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; transition: color 180ms ease; }
     .nav-links a:hover, .nav-links a:focus-visible { color: var(--paper); }
-    .menu-button { display: none; width: 32px; height: 32px; grid-template-rows: repeat(3, 1px); gap: 5px; align-content: center; padding: 8px 0 8px 12px; border: 0; background: none; color: var(--paper); cursor: pointer; }
+    .menu-button { display: none; width: 32px; height: 32px; grid-template-rows: repeat(3, 1px); gap: 5px; align-content: center; padding: 8px 0 8px 12px; border: 0; background: none; color: var(--paper); cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
     .menu-button span { display: block; width: 20px; height: 1px; background: currentColor; transition: transform 180ms ease, opacity 180ms ease; }
     .menu-button[aria-expanded="true"] span:first-child { transform: translateY(6px) rotate(45deg); }
     .menu-button[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
