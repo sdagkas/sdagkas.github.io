@@ -19,35 +19,14 @@
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--ink);
-      color: var(--paper);
-      font-family: var(--sans);
-      line-height: 1.45;
-    }
+    body { margin: 0; background: var(--ink); color: var(--paper); font-family: var(--sans); line-height: 1.45; }
     body.modal-open, body.menu-open { overflow: hidden; }
     a { color: inherit; text-decoration: none; }
     button { font: inherit; }
 
-    .site-header {
-      position: fixed;
-      z-index: 10;
-      top: 0;
-      left: 0;
-      width: 100%;
-      border-bottom: 1px solid transparent;
-      transition: background 220ms ease, border-color 220ms ease;
-    }
+    .site-header { position: fixed; z-index: 10; top: 0; left: 0; width: 100%; border-bottom: 1px solid transparent; transition: background 220ms ease, border-color 220ms ease; }
     .site-header.is-scrolled { background: rgba(10, 10, 9, 0.93); border-color: var(--line); }
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: min(100% - 48px, 1440px);
-      height: 74px;
-      margin: auto;
-    }
+    .nav { display: flex; align-items: center; justify-content: space-between; width: min(100% - 48px, 1440px); height: 74px; margin: auto; }
     .wordmark { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; }
     .wordmark span { color: var(--accent); }
     .nav-links { display: flex; gap: 30px; align-items: center; }
@@ -59,21 +38,8 @@
     .menu-button[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
     .menu-button[aria-expanded="true"] span:last-child { transform: translateY(-6px) rotate(-45deg); }
 
-    .hero {
-      position: relative;
-      display: flex;
-      align-items: end;
-      min-height: 100svh;
-      padding: 132px max(24px, calc((100vw - 1440px) / 2)) 54px;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(8, 8, 7, 0.72) 0%, rgba(8, 8, 7, 0.16) 70%), linear-gradient(0deg, rgba(8, 8, 7, 0.78) 0%, transparent 48%);
-      z-index: 1;
-    }
+    .hero { position: relative; display: flex; align-items: end; min-height: 100svh; padding: 132px max(24px, calc((100vw - 1440px) / 2)) 54px; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8, 8, 7, 0.72) 0%, rgba(8, 8, 7, 0.16) 70%), linear-gradient(0deg, rgba(8, 8, 7, 0.78) 0%, transparent 48%); z-index: 1; }
     .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; animation: reveal-image 900ms ease both; }
     .hero-content { position: relative; z-index: 2; width: min(720px, 100%); animation: rise 700ms 160ms ease both; }
     .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 18px; color: var(--accent); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
@@ -142,7 +108,12 @@
     .modal { position: fixed; z-index: 20; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(0, 0, 0, 0.88); }
     .modal.is-open { display: flex; }
     .modal-content { position: relative; width: min(1100px, 100%); max-height: calc(100svh - 48px); animation: rise 220ms ease both; }
-    .modal-close { position: absolute; z-index: 1; top: -44px; right: 0; display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--ink); color: var(--paper); cursor: pointer; font-size: 1.2rem; line-height: 1; }
+    .modal-toolbar { position: absolute; z-index: 1; top: -44px; right: 0; display: flex; gap: 20px; align-items: center; }
+    .modal-close { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--ink); color: var(--paper); cursor: pointer; font-size: 1.2rem; line-height: 1; }
+    .modal-navigation { display: flex; gap: 8px; align-items: center; }
+    .modal-navigation button { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--ink); color: var(--paper); cursor: pointer; font-size: 1.2rem; line-height: 1; pointer-events: auto; }
+    .modal-navigation button:disabled { cursor: default; opacity: 0.3; }
+    .modal-navigation button:not(:disabled):hover, .modal-navigation button:not(:disabled):focus-visible, .modal-close:hover { border-color: var(--accent); color: var(--accent); }
     .modal-media { max-height: calc(100svh - 48px); background: #111; }
     .modal-media img, .modal-media iframe { display: block; width: 100%; max-height: calc(100svh - 48px); border: 0; }
     .modal-media img { height: auto; object-fit: contain; }
@@ -150,7 +121,25 @@
     .modal-caption { margin: 14px 0 0; }
     .modal-caption h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 1.8rem; font-weight: 400; }
     .modal-metadata { margin: 5px 0 0; color: var(--accent); font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    .modal-description { margin: 8px 0 0; color: #d4d1c9; font-size: 0.84rem; }
+    .modal-description {
+      margin: 8px 0 0;
+      overflow-y: auto;
+      padding-right: 12px;
+      color: #d4d1c9;
+      font-size: 0.84rem;
+      scrollbar-color: var(--accent) transparent;
+      scrollbar-width: thin;
+    }
+    .modal-description::-webkit-scrollbar { width: 6px; }
+    .modal-description::-webkit-scrollbar-track { background: transparent; }
+    .modal-description::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 999px; background: var(--accent); background-clip: padding-box; }
+    .modal-description::-webkit-scrollbar-thumb:hover { background: var(--paper); background-clip: padding-box; }
+
+    @media (min-width: 1050px) {
+      .modal-description {
+        max-height: 10vh;
+      }
+    }
 
     @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes reveal-image { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: scale(1); } }
@@ -175,7 +164,7 @@
       .contact-bottom { flex-direction: column; align-items: flex-start; }
       .modal { padding: 16px; }
       .modal-content { max-height: calc(100svh - 32px); }
-      .modal-close { top: -41px; }
+      .modal-toolbar { top: -41px; }
       .modal-media, .modal-media img, .modal-media iframe { max-height: calc(100svh - 32px); }
     }
   </style>
@@ -271,7 +260,13 @@
 
   <div class="modal" id="media-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
     <div class="modal-content">
-      <button class="modal-close" type="button" aria-label="Close media viewer">&times;</button>
+      <div class="modal-toolbar">
+        <div class="modal-navigation" aria-label="Navigate projects">
+          <button class="modal-previous" type="button" aria-label="Previous project">&#8592;</button>
+          <button class="modal-next" type="button" aria-label="Next project">&#8594;</button>
+        </div>
+        <button class="modal-close" type="button" aria-label="Close media viewer">&times;</button>
+      </div>
       <div class="modal-media" id="modal-media"></div>
       <div class="modal-caption">
         <h2 id="modal-title"></h2>
@@ -347,6 +342,8 @@
     const modalMetadata = document.querySelector('#modal-metadata');
     const modalDescription = document.querySelector('#modal-description');
     const closeModalButton = document.querySelector('.modal-close');
+    const previousProjectButton = document.querySelector('.modal-previous');
+    const nextProjectButton = document.querySelector('.modal-next');
     const navLinks = document.querySelector('#nav-links');
     const menuButton = document.querySelector('.menu-button');
     const emailLink = document.querySelector('#email-link');
@@ -355,6 +352,9 @@
     const emailAddress = ['stelios', 'dagkas', 'gmail', 'com'];
     const email = `${emailAddress[0]}.${emailAddress[1]}@${emailAddress[2]}.${emailAddress[3]}`;
     const emailAnchor = document.getElementById('email-link');
+    let activeCategory = 'all';
+    let visibleProjects = projects;
+    let currentProjectIndex = -1;
     emailAnchor.href = `mailto:${email}`;
     emailAnchor.textContent = email;
 
@@ -386,7 +386,8 @@
     }
 
     function renderProjects(category) {
-      const visibleProjects = category === 'all'
+      activeCategory = category;
+      visibleProjects = category === 'all'
         ? projects
         : projects.filter((project) => project.category === category);
       count.textContent = `${String(visibleProjects.length).padStart(2, '0')} projects`;
@@ -406,8 +407,14 @@
         </article>`).join('');
     }
 
+    function updateModalNavigation() {
+      previousProjectButton.disabled = currentProjectIndex <= 0;
+      nextProjectButton.disabled = currentProjectIndex === visibleProjects.length - 1;
+    }
+
     function openModal(project, trigger) {
       lastFocusedElement = trigger;
+      currentProjectIndex = visibleProjects.indexOf(project);
       modalTitle.textContent = project.title;
       modalMetadata.textContent = `${project.format} / Role: ${project.role} / ${project.year}`;
       modalDescription.innerHTML = project.description;
@@ -417,7 +424,21 @@
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('modal-open');
+      updateModalNavigation();
       closeModalButton.focus();
+    }
+
+    function showProjectAt(index) {
+      if (!modal.classList.contains('is-open') || index < 0 || index >= visibleProjects.length) return;
+      currentProjectIndex = index;
+      const project = visibleProjects[currentProjectIndex];
+      modalTitle.textContent = project.title;
+      modalMetadata.textContent = `${project.format} / Role: ${project.role} / ${project.year}`;
+      modalDescription.innerHTML = project.description;
+      modalMedia.innerHTML = project.type === 'video'
+        ? getVideoMarkup(project)
+        : `<img src="${project.image}" alt="${project.alt}">`;
+      updateModalNavigation();
     }
 
     function closeModal() {
@@ -426,6 +447,7 @@
       modal.setAttribute('aria-hidden', 'true');
       modalMedia.innerHTML = '';
       document.body.classList.remove('modal-open');
+      currentProjectIndex = -1;
       lastFocusedElement?.focus();
     }
 
@@ -444,8 +466,14 @@
     });
 
     closeModalButton.addEventListener('click', closeModal);
+    previousProjectButton.addEventListener('click', () => showProjectAt(currentProjectIndex - 1));
+    nextProjectButton.addEventListener('click', () => showProjectAt(currentProjectIndex + 1));
     modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
-    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeModal(); });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeModal();
+      if (event.key === 'ArrowLeft') showProjectAt(currentProjectIndex - 1);
+      if (event.key === 'ArrowRight') showProjectAt(currentProjectIndex + 1);
+    });
 
     menuButton.addEventListener('click', () => {
       const isOpen = navLinks.classList.toggle('is-open');
