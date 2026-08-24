@@ -133,15 +133,7 @@
     .modal-caption { margin: 14px 0 0; }
     .modal-caption h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 1.8rem; font-weight: 400; }
     .modal-metadata { margin: 5px 0 0; color: var(--accent); font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    .modal-description {
-      margin: 8px 0 0;
-      overflow-y: auto;
-      padding-right: 12px;
-      color: #d4d1c9;
-      font-size: 0.84rem;
-      scrollbar-color: var(--accent) transparent;
-      scrollbar-width: thin;
-    }
+    .modal-description { margin: 8px 0 0; overflow-y: auto; padding-right: 12px; color: #d4d1c9; font-size: 0.84rem; scrollbar-color: var(--accent) transparent; scrollbar-width: thin; }
     .modal-description::-webkit-scrollbar { width: 6px; }
     .modal-description::-webkit-scrollbar-track { background: transparent; }
     .modal-description::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 999px; background: var(--accent); background-clip: padding-box; }
@@ -151,6 +143,26 @@
       .modal-description {
         max-height: 10vh;
       }
+    }
+
+    @media (min-width: 1367px) and (max-width: 1600px) {
+      .modal-content { width: 850px; }
+    }
+
+    @media (min-width: 1281px) and (max-width: 1366px) {
+      .modal-content { width: 640px; }
+    }
+
+    @media (min-width: 1000px) and (max-width: 1280px) {
+      .modal-content { width: 560px; }
+    }
+
+    @media 
+      (-webkit-min-device-pixel-ratio: 1.25) and (min-width: 1200px),
+      (min-resolution: 1.25dppx) and (min-width: 1200px),
+      (min-resolution: 120dpi) and (min-width: 1200px)
+    {
+      .modal-content { width: min(1100px, 55%); }
     }
 
     @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
